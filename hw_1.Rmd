@@ -1,0 +1,12 @@
+---
+title: "Homework 1"
+output: github_document
+---
+
+My **Name** is Brandon Estrem
+
+I am *learning* how to use Rstudio and gitHub
+
+```{r}
+2+2
+```
