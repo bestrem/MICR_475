@@ -1,0 +1,13 @@
+---
+title: "Homework3"
+output: github_document
+---
+
+I wanted to investigate the relationship between Murder, rape, and the size of the urban population. This plot suggests that Murder and Rape have a positive, linear relationship. It also suggests that UrbanPop does not strongly correlate to murder rates but is more correlated to rape.
+
+```{r}
+library(tidyverse)
+head(USArrests, 10)
+ggplot(data=USArrests)+
+  geom_point(mapping = aes(x = Murder, y = Rape, size = UrbanPop))
+```
