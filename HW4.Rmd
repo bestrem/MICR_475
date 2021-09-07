@@ -1,0 +1,29 @@
+---
+title: "HW 4"
+output: github_document
+---
+
+########
+#HW4
+########
+
+```{r, message = FALSE}
+library(tidyverse)
+library(nycflights13)
+
+# 1) Sum using variables
+a <- 3
+b <- 2
+sum(a, b)
+
+# 2) Sum of two numbers
+sum(1, 2)
+
+# 3) Scatter plot of AA flight delays, departure delay vs arrival delay
+AA_flights <- filter(flights, carrier == "AA")
+ggplot(data = AA_flights) +
+  geom_point(mapping = aes(x = dep_delay , y = arr_delay))
+
+
+```
+
