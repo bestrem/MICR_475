@@ -1,11 +1,10 @@
 HW 4
 ================
 
-######## 
-
-\#HW4 \#\#\#\#\#\#\#\#
-
 ``` r
+########
+#HW4 
+########
 library(tidyverse)
 library(nycflights13)
 
