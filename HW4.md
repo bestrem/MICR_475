@@ -2,16 +2,10 @@ HW 4
 ================
 
 ``` r
-########
-#HW4 
-########
-library(tidyverse)
-library(nycflights13)
-
 # 1) Sum using variables
 a <- 3
 b <- 2
-sum(a, b)
+print(a + b)
 ```
 
     ## [1] 5
@@ -25,11 +19,11 @@ sum(1, 2)
 
 ``` r
 # 3) Scatter plot of AA flight delays, departure delay vs arrival delay
+library(tidyverse)
+library(nycflights13)
 AA_flights <- filter(flights, carrier == "AA")
 ggplot(data = AA_flights) +
   geom_point(mapping = aes(x = dep_delay , y = arr_delay))
 ```
-
-    ## Warning: Removed 782 rows containing missing values (geom_point).
 
 ![](HW4_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
