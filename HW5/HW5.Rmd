@@ -1,0 +1,50 @@
+---
+title: "HW 5"
+output: github_document
+---
+
+
+Example of a good plot
+
+
+
+**Circos Diagram**
+Example of a Bad Plot
+
+*Outer labels mark location of potential drivers of lung cancer
+  a) chromosome position is mapped to the radius location
+*The data named "mutation frequency - TCGA " is mapped as the outer histogram
+  a) number of mutations is mapped to the y-axis
+  b) chromosome position is mapped to the radius location
+  c) plotted as a histogram
+*The data named "average copy changes - TCGA" is mapped below the TCGA histogram
+  a) color is mapped to copy number
+  b) chromosome position is mapped to the radius location
+  c) plotted as a heatmap
+*The data named "average copy changes - CIS" is mapped below the average copy change heatmap
+  a) color is mapped to copy number
+  b) chromosome position is mapped to the radius location
+  c) plotted as a heatmap
+*The data named "mutation frequency - CIS" is mapped as the inner histogram
+  a) number of mutations is mapped to the y-axis
+  b) chromosome position is mapped to the radius location
+  c) plotted as a histogram
+*The copy number data for each individual in the study is mapped in the inner section of the circos diagram
+  a) color is mapped to copy number (gain is red, loss is blue)
+  b) chromosome position is mapped to the radius location
+  c) Row is mapped to patient number
+  d) plotted as a heatmap
+
+
+I think this is a bad plot because too much information was put into a small area making it hard to interpert the data. The histograms are so small it is hard to tell where the greatest variations are. For the individual patient data, since the circle gets really small in the middle you can't tell what the data looks like for those patients.
+
+As well, it is wrong because there is no scale for the histogram or heat maps.
+
+I think this graph is a better data summary piece to be added in the supplemental figures. I would prefer a few representative pieces to be shown here in a linear format instead of the ciros plot. 
+
+
+
+```{r, message = FALSE, warning = FALSE}
+
+```
+
