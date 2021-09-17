@@ -21,14 +21,10 @@ reduced_diamonds
 
 ```{r}
 # Find average size of top 100 diamonds of each clarity category
-top_hundred_size <- diamonds %>%
+diamonds %>%
   group_by(clarity) %>%
-  mutate(area.xyz = x*y*z) %>%
-  arrange(area.xyz)
-  
-top_hundred_size %>%
-  dplyr::top_n(100, area.xyz) %>%
-  summarize(average.area = mean(area.xyz))
+  slice_max(order_by = carat, n = 100, with_ties = FALSE) %>%
+  summarize(average.carat = mean(carat))
 
 ```
 
