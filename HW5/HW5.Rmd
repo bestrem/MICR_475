@@ -4,47 +4,53 @@ output: github_document
 ---
 
 
-Example of a good plot
 
+```{r, message = FALSE}
+library(tidyverse)
 
+# Count the diamonds in each cut
+count(diamonds, cut)
 
-**Circos Diagram**
-Example of a Bad Plot
+```
 
-*Outer labels mark location of potential drivers of lung cancer
-  a) chromosome position is mapped to the radius location
-*The data named "mutation frequency - TCGA " is mapped as the outer histogram
-  a) number of mutations is mapped to the y-axis
-  b) chromosome position is mapped to the radius location
-  c) plotted as a histogram
-*The data named "average copy changes - TCGA" is mapped below the TCGA histogram
-  a) color is mapped to copy number
-  b) chromosome position is mapped to the radius location
-  c) plotted as a heatmap
-*The data named "average copy changes - CIS" is mapped below the average copy change heatmap
-  a) color is mapped to copy number
-  b) chromosome position is mapped to the radius location
-  c) plotted as a heatmap
-*The data named "mutation frequency - CIS" is mapped as the inner histogram
-  a) number of mutations is mapped to the y-axis
-  b) chromosome position is mapped to the radius location
-  c) plotted as a histogram
-*The copy number data for each individual in the study is mapped in the inner section of the circos diagram
-  a) color is mapped to copy number (gain is red, loss is blue)
-  b) chromosome position is mapped to the radius location
-  c) Row is mapped to patient number
-  d) plotted as a heatmap
+```{r}
+# Randomly select 1% of the diamond data
+reduced_diamonds <- sample_frac(diamonds, .01)
+reduced_diamonds
+```
 
+```{r}
+# Find average size of top 100 diamonds of each clarity category
+top_hundred_size <- diamonds %>%
+  group_by(clarity) %>%
+  mutate(area.xyz = x*y*z) %>%
+  arrange(area.xyz)
+  
+top_hundred_size %>%
+  dplyr::top_n(100, area.xyz) %>%
+  summarize(average.area = mean(area.xyz))
 
-I think this is a bad plot because too much information was put into a small area making it hard to interpert the data. The histograms are so small it is hard to tell where the greatest variations are. For the individual patient data, since the circle gets really small in the middle you can't tell what the data looks like for those patients.
+```
 
-As well, it is wrong because there is no scale for the histogram or heat maps.
+```{r}
+# plot x vs y, x vs z
+ggplot(diamonds) +
+  geom_point(aes(y = x, x = y))
+  
+ggplot(diamonds) +
+  geom_point(aes(y = x, x = z))
+```
 
-I think this graph is a better data summary piece to be added in the supplemental figures. I would prefer a few representative pieces to be shown here in a linear format instead of the ciros plot. 
+```{r}
+# Remove outliers
+rm_outliers <- diamonds %>%
+  filter(x > 0, y > 0 , z > 0) %>%
+  filter( y/x < 4, z/x < 4)
+  
+ggplot(rm_outliers) +
+  geom_point(aes(y = x, x = y))
 
-
-
-```{r, message = FALSE, warning = FALSE}
-
+ggplot(rm_outliers) +
+  geom_point(aes(y = x, x = z))
 ```
 
