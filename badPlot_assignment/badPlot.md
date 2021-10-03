@@ -1,15 +1,14 @@
----
-title: "R Notebook"
-output: github_document
----
+R Notebook
+================
 
-```{r, message=FALSE, warning=FALSE}
+``` r
 library(tidyverse)
 library(hrbrthemes)
 library(viridis)
 library(readr)
 ```
-```{r, message=FALSE, warning=FALSE}
+
+``` r
 ################
 ##Load Data##
 ################
@@ -37,11 +36,9 @@ X70hr_fwd_edit <- read_delim("peakData/70hr.fwd.edit.bed",
 X70hr_rev_edit <- read_delim("peakData/70hr.rev.edit.bed", 
     delim = "\t", escape_double = FALSE, 
     trim_ws = TRUE)
-
 ```
 
-
-```{r}
+``` r
 ################
 ##Wrangle Data##
 ################
@@ -67,16 +64,17 @@ peak2 <- data %>%
 all_peaks <- bind_rows(peak1, peak2) %>%
   ungroup() %>%
   arrange(chr, start)
-
 ```
 
+\#The Good Stuff\# This graph is a bad plot because I only plotted the
+mean value of each time point. This graph gives few ideas to the reader
+whereas the goal is to give the most ideas in the shortest time (Tufte
+pg 51). My bad plot distorts the change in gap size because the x-axis
+begins at 1750 (Tufte pg 53). I also distort the data by including only
+the mean value and fitting them to an exponential curve which fits quite
+nicely but does not explain the data set well.
 
-
-#The Good Stuff#
-This graph is a bad plot because I only plotted the mean value of each time point. This graph gives few ideas to the reader whereas the goal is to give the most ideas in the shortest time (Tufte pg 51). My bad plot distorts the change in gap size because the x-axis begins at 1750 (Tufte pg 53). I also distort the data by including only the mean value and fitting them to an exponential curve which fits quite nicely but does not explain the data set well.
-
-
-```{r}
+``` r
 ############
 ##Bad Plot##
 ############
@@ -91,11 +89,11 @@ bad$time <- c(62,64,70)
 ggplot(bad, aes(time, mean.gap, color='coral'))+
   geom_point()+
   geom_smooth(method="lm", aes(color="Exp Model"), formula= (y ~ exp(x)), se=FALSE, linetype = 1)
-
-
 ```
 
-```{r}
+![](badPlot_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+``` r
 #############
 ##Good Plot##
 #############
@@ -110,9 +108,6 @@ ggplot(peak1, aes(sample, gap, fill=sample)) +
   ) +
   ggtitle("Gap size for each sample") +
   xlab("")
-  
 ```
 
-
-
-
+![](badPlot_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
