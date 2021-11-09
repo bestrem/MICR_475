@@ -2,6 +2,7 @@ HW8
 ================
 
 ``` r
+#Load necessary packages
 library(tidyverse)
 library(nls2)
 library(modelr)
@@ -9,26 +10,30 @@ library(broom)
 library(viridis)
 ```
 
-\#Question 1
+# Question 1
 
 ``` r
+#set the theme for ggplot graphs in the document
 theme_set(theme_classic())
 
+#plot data without a linear model
 ggplot(diamonds, aes(carat, price, group=color))+
   geom_line(alpha=.33)
 ```
 
 ![](HW8_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
-\#\#Formula
+## Formula
 
 ``` r
+#Linear model for diamonds dataset price by weight
 price_by_weight_color <- lm(formula = price ~ carat + color, data=diamonds)
 ```
 
-\#\#Data Wrangling
+## Data Wrangling
 
 ``` r
+#Wrangle data for linear model
 by_color <- diamonds %>%
   group_by(color) %>%
   nest()
@@ -51,6 +56,7 @@ by_color <- by_color %>%
   arrange(slope.priceByWeight) %>%
   select(-c(data, fit))
 
+#print table of slope (price by weight) for diamonds dataset
 by_color
 ```
 
@@ -66,26 +72,29 @@ by_color
     ## 6 G                   8525.
     ## 7 F                   8677.
 
-\#Question 2
+# Question 2
 
 ``` r
+#plot raw DNase data
 ggplot(DNase, aes(conc, density))+
   geom_point()
 ```
 
 ![](HW8_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
-\#\#Formulas
+## Formulas
 
 ``` r
+#Two formulas to model density by concentration for DNase dataset
 sqrt_form <- formula(density ~ beta_1 * sqrt(conc) + beta_0)
 
 monod_form <- formula(density ~ (conc * d_max)/(conc + k))
 ```
 
-\#\#Run models, analyze which is best
+## Run models, analyze which is best
 
 ``` r
+#Wrangle data for linear models
 by_run <- DNase %>%
   group_by(Run) %>%
   nest() %>%
@@ -98,6 +107,7 @@ by_run <- DNase %>%
                                     start = list(d_max=5, k=1)
                                     )))
 
+#Determine which plot is better (lower aic is better)
 aic_sqrt <- data_frame()
 for (i in 1:11) {
   aic_sqrt <- bind_rows(aic_sqrt, glance(by_run$sqrt_fit[[i]])) %>%
@@ -120,6 +130,7 @@ model_analysis <- model_analysis %>%
   pivot_longer(!Run, names_to = "model", values_to = "aic") %>%
   group_by(model)
 
+#Plot aic value for each model
 ggplot(model_analysis, aes(model, aic))+
   geom_boxplot()+
   scale_fill_viridis(discrete = TRUE, alpha=0.6) +
@@ -131,45 +142,41 @@ ggplot(model_analysis, aes(model, aic))+
 
 Monod is the better model for the data because the AIC is lower.
 
-\#\#Extra Credit
+## Extra Credit
 
 ``` r
-sqrt_predict <- data_frame(c("sqrt"))%>%
-  set_names(c("model"))
-monod_predict <- data_frame(c("monod"))%>%
-  set_names(c("model"))
-
-for (i in 1:11){
-  predict <- data_frame(predict(by_run$sqrt_fit[[i]])) %>%
-    set_names(c("sqrt"))
-  sqrt_predict <- bind_cols(sqrt_predict, predict)
-  
-  predict <- data_frame(predict(by_run$monod_fit[[i]]))%>%
-    set_names(c("monod"))
-  monod_predict <- bind_cols(monod_predict, predict)
+#Predict non linear model for data
+for (i in 1:11) {
+  sqrt_predict <- data_frame(predict(by_run$sqrt_fit[[i]]))%>%
+    set_names(c("sqrt"))%>%
+    unique()
+  monod_predict <- data_frame(predict(by_run$monod_fit[[i]]))%>%
+    set_names(c("monod"))%>%
+    unique()
 }
 
-DNase1 <- DNase %>%
-  select(conc, density)
+#select unique concentration values to bind with density predictions
+model_conc <- DNase %>%
+  select(c(conc))%>%
+  set_names(c("model.conc"))%>%
+  unique()
 
-sqrt_predict <- sqrt_predict %>%
-  set_names(c("model", "Run1", "Run2", "Run3", "Run4", "Run5", "Run6", "Run7", "Run8", "Run9", "Run10", "Run11")) %>%
-  pivot_longer(Run1:Run11, names_to = "Run", values_to = "Prediction") %>%
-  arrange(Run) %>%
-  bind_cols(DNase1)
+#Bind concentration with predicted density
+predictions <- bind_cols(sqrt_predict, monod_predict)%>%
+  add_column(model_conc) %>%
+  pivot_longer(sqrt:monod, names_to = "model", values_to = "model.density")
 
-monod_predict <- monod_predict %>%
-  set_names(c("model", "Run1", "Run2", "Run3", "Run4", "Run5", "Run6", "Run7", "Run8", "Run9", "Run10", "Run11")) %>%
-  pivot_longer(Run1:Run11, names_to = "Run", values_to = "Prediction") %>%
-  arrange(Run) %>%
-  bind_cols(DNase1)
+#Obtain orgigional conc and density values
+plot_predictions <- DNase %>%
+  select(c(conc, density))%>%
+  unique()%>%
+    bind_rows(predictions)
+    
 
-model_Predictions <- bind_rows(sqrt_predict, monod_predict) %>%
-  group_by(Run, model)
-
-ggplot(model_Predictions, aes(conc, density))+
+#plot original density and conc values with predictions
+ggplot(plot_predictions, aes(conc, density))+
   geom_point()+
-  geom_smooth(aes(conc, Prediction, color = model))+
+  geom_line(aes(model.conc, model.density, color=model))+
   scale_color_brewer(palette = "Set1")
 ```
 
