@@ -17,9 +17,12 @@ library(viridis)
 theme_set(theme_classic())
 
 #plot data without a linear model
-ggplot(diamonds, aes(carat, price, group=color))+
-  geom_line(alpha=.33)
+ggplot(diamonds, aes(carat, price))+
+  geom_point(alpha=.33)+
+  geom_smooth(aes(carat, price, group=color, color = color))
 ```
+
+    ## `geom_smooth()` using method = 'gam' and formula 'y ~ s(x, bs = "cs")'
 
 ![](HW8_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
